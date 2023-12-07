@@ -76,7 +76,7 @@ class PilihanResource extends Resource
                 Group::make('kampuses.nama_kampus')
                     ->titlePrefixedWithLabel(false)
                     ->label('Kampus')
-                    ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('nilai', $direction)),
+                    ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('jurusan_id', 'asc')->orderBy('nilai', $direction)),
             ])
             ->columns([
                 Tables\Columns\TextColumn::make('users.name')
@@ -86,7 +86,6 @@ class PilihanResource extends Resource
                 Tables\Columns\TextColumn::make('jurusans.nama_jurusan')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nilai')
-                    ->hidden(auth()->user()->hasRole(['super_admin', 'admin']))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
