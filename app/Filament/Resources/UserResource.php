@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class UserResource extends Resource
 {
@@ -44,29 +45,34 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('nilai')
                     ->numeric()
                     ->maxLength(255),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->maxLength(255),
-                Forms\Components\Toggle::make('is_can_choose')
-                    ->required(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
+        $userAuth = auth()->user();
         return $table
             ->columns([
+                //Tables\Columns\TextColumn::make('no')
+                //    ->rowIndex(isFromZero: false)
+                //    ->hidden($userAuth->hasRole(['super_admin', 'guru_bk'])),
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->searchable()
+                    ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('username')
+                    ->searchable()->hidden(!$userAuth->hasRole('super_admin')),
+                Tables\Columns\TextColumn::make('nilai')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
                 Tables\Columns\IconColumn::make('is_can_choose')
+                    ->label('Dapat Memilih')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -85,6 +91,7 @@ class UserResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
+                ExportBulkAction::make()->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),

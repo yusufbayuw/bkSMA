@@ -3,19 +3,20 @@
 namespace App\Filament\Resources;
 
 use Filament\Forms;
+use App\Models\User;
 use Filament\Tables;
 use App\Models\Pilihan;
 use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Tables\Grouping\Group;
+use Filament\Forms\Components\Hidden;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\PilihanResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use App\Filament\Resources\PilihanResource\RelationManagers;
-use App\Models\User;
-use Filament\Forms\Components\Hidden;
-use Filament\Tables\Grouping\Group;
 
 class PilihanResource extends Resource
 {
@@ -71,6 +72,7 @@ class PilihanResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $userAuth = auth()->user();
         return $table
             ->groups([
                 Group::make('kampuses.nama_kampus')
@@ -79,11 +81,18 @@ class PilihanResource extends Resource
                     ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('jurusan_id', 'asc')->orderBy('nilai', $direction)),
             ])
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->searchable()
+                    ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 Tables\Columns\TextColumn::make('users.name')
+                    ->label('Nama')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('kampuses.nama_kampus')
+                    ->label('Kampus')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('jurusans.nama_jurusan')
+                    ->label('Jurusan')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nilai')
                     ->sortable(),
@@ -104,6 +113,7 @@ class PilihanResource extends Resource
                 Tables\Actions\EditAction::make()->hidden(!auth()->user()->is_can_choose),
             ])
             ->bulkActions([
+                ExportBulkAction::make()->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),

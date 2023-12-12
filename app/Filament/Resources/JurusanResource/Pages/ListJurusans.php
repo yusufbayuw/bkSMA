@@ -13,9 +13,12 @@ class ListJurusans extends ListRecords
 
     protected function getHeaderActions(): array
     {
+        $userAuth = auth()->user();
         return [
             ExcelImportAction::make()
-                ->color("primary"),
+                ->color("primary")
+                ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk']))
+                ->icon('heroicon-o-arrow-up-tray'),
             Actions\CreateAction::make(),
         ];
     }

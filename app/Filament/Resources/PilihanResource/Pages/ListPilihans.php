@@ -12,8 +12,9 @@ class ListPilihans extends ListRecords
 
     protected function getHeaderActions(): array
     {
+        $userAuth = auth()->user();
         return [
-            Actions\CreateAction::make()->hidden(!auth()->user()->is_can_choose),
+            Actions\CreateAction::make()->hidden($userAuth->is_choosed),
         ];
     }
 }

@@ -2,16 +2,18 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\JurusanResource\Pages;
-use App\Filament\Resources\JurusanResource\RelationManagers;
-use App\Models\Jurusan;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Jurusan;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Tables\Grouping\Group;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\JurusanResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use App\Filament\Resources\JurusanResource\RelationManagers;
 
 class JurusanResource extends Resource
 {
@@ -27,9 +29,11 @@ class JurusanResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $userAuth = auth()->user();
         return $form
             ->schema([
                 Forms\Components\Select::make('kampus_id')
+                    ->label('Nama Kampus')
                     ->required()
                     ->relationship('kampuses', 'nama_kampus'),
                 Forms\Components\TextInput::make('nama_jurusan')
@@ -40,11 +44,22 @@ class JurusanResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $userAuth = auth()->user();
         return $table
+            ->groups([
+                Group::make('kampuses.nama_kampus')
+                    ->titlePrefixedWithLabel(false)
+                    ->label('Kampus')
+            ])
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->searchable()
+                    ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 Tables\Columns\TextColumn::make('kampuses.nama_kampus')
                     ->label('Kampus')
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('nama_jurusan')
                     ->label('Jurusan')
                     ->searchable(),
@@ -65,6 +80,7 @@ class JurusanResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
+                ExportBulkAction::make()->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
