@@ -14,6 +14,7 @@ class PilihanObserver
     {
         $userPilih = User::find($pilihan->user_id);
         $userPilih->is_can_choose = false;
+        $userPilih->is_choosed = true;
         $userPilih->save();
     }
 
@@ -24,6 +25,7 @@ class PilihanObserver
     {
         $userPilih = User::find($pilihan->user_id);
         $userPilih->is_can_choose = false;
+        $userPilih->is_choosed = true;
         $userPilih->save();
     }
 
