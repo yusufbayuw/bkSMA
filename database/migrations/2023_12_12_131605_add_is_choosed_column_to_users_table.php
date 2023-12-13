@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_choosed')->after('is_can_choose')->default(false);
+            $table->boolean('is_choosed')->after('is_can_choose')->default(false); 
         });
     }
 
