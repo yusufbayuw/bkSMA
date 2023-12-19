@@ -16,13 +16,13 @@ class ListUsers extends ListRecords
     {
         $userAuth = auth()->user();
         return [
-            ExcelImportAction::make()
+            ExcelImportAction::make('update')
                 ->label('Update')
                 ->icon('heroicon-o-arrow-path')
                 ->color("success")
                 ->use(MyUserImport::class)
                 ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
-            ExcelImportAction::make()
+            ExcelImportAction::make('import')
                 ->color("info")
                 ->icon('heroicon-o-arrow-up-tray')
                 ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
