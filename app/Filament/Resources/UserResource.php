@@ -43,8 +43,7 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('program')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('nilai')
-                    ->numeric()
-                    ->maxLength(255),
+                    ->numeric(),
                 Forms\Components\TextInput::make('password')
                     ->password()
                     ->maxLength(255),
