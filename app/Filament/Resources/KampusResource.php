@@ -34,6 +34,12 @@ class KampusResource extends Resource
                     ->label('Nama Kampus')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\Select::make('jenis')
+                    ->options([
+                        "PT Negeri" => "PT Negeri",
+                        "PT Swasta" => "PT Swasta",
+                        "PT Luar Negeri" => "PT Luar Negeri"
+                    ]),
                 Forms\Components\TextInput::make('lokasi_kampus')
                     ->label('Lokasi')
                     ->maxLength(255),
@@ -52,6 +58,10 @@ class KampusResource extends Resource
                 Tables\Columns\TextColumn::make('nama_kampus')
                     ->label('Nama Kampus')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('jenis')
+                    ->sortable()
+                    ->searchable()
+                    ->badge(),
                 Tables\Columns\TextColumn::make('lokasi_kampus')
                     ->label('Lokasi')
                     ->searchable(),
