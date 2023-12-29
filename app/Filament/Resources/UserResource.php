@@ -46,7 +46,9 @@ class UserResource extends Resource
                     ->numeric(),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->dehydrateStateUsing(static fn (null|string $state): null|string => filled($state) ? Hash::make($state) : null,)
+                    ->dehydrated(static fn (null|string $state): bool => filled($state)),
                 Forms\Components\Select::make('roles')
                     ->relationship('roles', 'name')
                     ->multiple()
