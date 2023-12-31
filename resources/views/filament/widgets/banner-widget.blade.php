@@ -8,8 +8,11 @@
             <div class="text-center text-sm text-gray-950">
                 <span class="text-base text-primary-600 font-semibold">Selamat {{ explode(" ", $user->name)[0]." (".$user->kelas.")" }}</span>, Anda masuk kuota <span class="text-primary-600 font-bold">eligible</span> peringkat ke-<span class="text-primary-600 font-bold">{{ $user->ranking }}</span> kelompok <span class="text-primary-600 font-bold">{{ $user->program }}</span> dengan nilai rata-rata <span class="text-primary-600 font-bold">{{ $user->nilai }}</span>
             </div>
-        @endif
-        
+        @endif  
     </x-filament::section>
 </x-filament-widgets::widget>
+@else
+<div>
+    <p></p>
+</div>
 @endif
