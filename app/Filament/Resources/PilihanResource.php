@@ -136,7 +136,7 @@ class PilihanResource extends Resource
             ->bulkActions([
                 ExportBulkAction::make()->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 ]),
             ]);
     }

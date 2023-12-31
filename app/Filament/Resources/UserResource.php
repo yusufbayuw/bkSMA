@@ -71,6 +71,16 @@ class UserResource extends Resource
                     ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('kelas')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('program')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('ranking')
+                    ->searchable()
+                    ->badge()
+                    ->color(fn (User $record) => ($record->eligible) ? 'primary' : 'danger'),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('username')
