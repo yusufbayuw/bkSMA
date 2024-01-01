@@ -79,6 +79,7 @@ class UserResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('ranking')
                     ->searchable()
+                    ->sortable()
                     ->badge()
                     ->color(fn (User $record) => ($record->eligible) ? 'primary' : 'danger'),
                 Tables\Columns\TextColumn::make('email')

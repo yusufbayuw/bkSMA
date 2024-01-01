@@ -99,6 +99,9 @@ class PilihanResource extends Resource
                     ->label('ID')
                     ->searchable()
                     ->hidden(!$userAuth->hasRole(['super_admin'])), */
+                Tables\Columns\TextColumn::make('ranking')
+                    ->label('Ranking')
+                    ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 Tables\Columns\TextColumn::make('users.name')
                     ->label('Nama')
                     //->weight(FontWeight::Bold)

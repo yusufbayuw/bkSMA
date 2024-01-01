@@ -103,7 +103,8 @@ class PengaturanResource extends Resource
                         } else {
                             //
                         }
-                    }),
+                    })
+                    ->hidden(fn (Pengaturan $record) => !($record->id === 1 || $record->id === 2)),
                 Tables\Actions\EditAction::make(),
                 //Tables\Actions\DeleteAction::make(),
             ])
