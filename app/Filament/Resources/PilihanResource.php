@@ -31,6 +31,11 @@ class PilihanResource extends Resource
 
     protected static ?string $slug = 'pilihan';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return (auth()->user()->hasRole(['super_admin', 'guru_bk'])) ? static::getModel()::count() : null;
+    }
+
     public static function getEloquentQuery(): Builder
     {
         $userAuth = auth()->user();
@@ -104,6 +109,7 @@ class PilihanResource extends Resource
                     ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 Tables\Columns\TextColumn::make('users.name')
                     ->label('Nama')
+                    ->color(fn (Pilihan $record) => ($userAuth->hasRole(['super_admin', 'guru_bk'])) ? ((User::find($record->user_id)->eligible) ? null : 'danger') : null)
                     //->weight(FontWeight::Bold)
                     ->searchable()
                     ->sortable(),

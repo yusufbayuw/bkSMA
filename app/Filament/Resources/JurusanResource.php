@@ -27,6 +27,11 @@ class JurusanResource extends Resource
 
     protected static ?string $slug = 'jurusan';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
     public static function form(Form $form): Form
     {
         $userAuth = auth()->user();

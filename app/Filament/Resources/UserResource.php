@@ -26,6 +26,11 @@ class UserResource extends Resource
 
     protected static ?string $slug = 'anggota';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::whereNotNull('program')->count();
+    }
+
     public static function form(Form $form): Form
     {
         return $form
