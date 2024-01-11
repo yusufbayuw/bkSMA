@@ -123,7 +123,6 @@ class PilihanResource extends Resource
                     )
                     ->badge()
                     ->color(fn (Pilihan $record) => ($userAuth->hasRole(['super_admin', 'guru_bk'])) ? ((User::find($record->user_id)->eligible) ? null : 'danger') : null)
-                    ->sortable()
                     ->hidden(!($userAuth->hasRole(['super_admin', 'guru_bk']) || Pengaturan::find(4)->nilai)),
                 Tables\Columns\TextColumn::make('users.name')
                     ->label('Nama')
