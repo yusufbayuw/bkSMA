@@ -17,6 +17,7 @@ use App\Filament\Resources\PilihanResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use App\Filament\Resources\PilihanResource\RelationManagers;
+use App\Models\Pengaturan;
 use Filament\Forms\Set;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\Layout\Stack;
@@ -40,7 +41,7 @@ class PilihanResource extends Resource
     {
         $userAuth = auth()->user();
         if ($userAuth->hasRole(['super_admin', 'admin_pusat', 'guru_bk'])) {
-            return parent::getEloquentQuery()->orderBy('kampus_id','asc')->orderBy('jurusan_id', 'asc')->orderBy('nilai', 'desc');
+            return parent::getEloquentQuery(); //->orderBy('kampus_id','asc')->orderBy('jurusan_id', 'asc')->orderBy('nilai', 'desc');
         } else {
             return parent::getEloquentQuery()->where('user_id', $userAuth->id);
         }
@@ -54,7 +55,7 @@ class PilihanResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('user_id')
-                    ->relationship('users', 'name',  modifyQueryUsing: fn (Builder $query) => ($userAuthAdmin) ? $query : $query->where('id',$userAuth->id))
+                    ->relationship('users', 'name',  modifyQueryUsing: fn (Builder $query) => ($userAuthAdmin) ? $query : $query->where('id', $userAuth->id))
                     ->default($userAuth->id)
                     ->label('Nama Siswa')
                     ->disabled(!$userAuthCanChange)
@@ -89,13 +90,18 @@ class PilihanResource extends Resource
                 Group::make('kampuses.nama_kampus')
                     ->titlePrefixedWithLabel(false)
                     ->label('Kampus')
-                    ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('jurusan_id', 'asc')->orderBy('nilai', $direction)),
+                    ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('jurusan_id', 'asc')->orderBy('ranking', $direction)),
                 Group::make('jurusans.nama_jurusan')
                     ->titlePrefixedWithLabel(false)
                     //->getKeyFromRecordUsing(fn (Pilihan $record): string => $record->jurusan_id)
                     ->getTitleFromRecordUsing(fn (Pilihan $record): string => ucfirst($record->kampuses->nama_kampus . ' - ' . $record->jurusans->nama_jurusan))
                     ->label('Jurusan')
-                    ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('nilai', $direction)),
+                    ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('kampus_id', 'asc')->orderBy('jurusan_id', 'asc')->orderBy('ranking', $direction)),
+                Group::make('users.program')
+                    ->titlePrefixedWithLabel(false)
+                    //->getKeyFromRecordUsing(fn (Pilihan $record): string => $record->jurusan_id)
+                    ->getTitleFromRecordUsing(fn (Pilihan $record): string => ucfirst($record->users->program))
+                    ->label('Eligible (IPA/IPS)'),
             ])->groupingSettingsHidden(!$userAuth->hasRole(['super_admin', 'guru_bk']))
             ->columns([
                 //Tables\Columns\TextColumn::make('no')
@@ -107,12 +113,23 @@ class PilihanResource extends Resource
                 Tables\Columns\TextColumn::make('ranking')
                     ->label('Ranking')
                     ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
+                Tables\Columns\TextColumn::make('users.ranking')
+                    ->label('Eligible')
+                    ->badge()
+                    ->sortable()
+                    ->hidden(!($userAuth->hasRole(['super_admin', 'guru_bk']) || Pengaturan::find(4)->nilai)),
                 Tables\Columns\TextColumn::make('users.name')
                     ->label('Nama')
                     ->color(fn (Pilihan $record) => ($userAuth->hasRole(['super_admin', 'guru_bk'])) ? ((User::find($record->user_id)->eligible) ? null : 'danger') : null)
                     //->weight(FontWeight::Bold)
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('users.kelas')
+                    ->label('Kelas')
+                    ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
+                Tables\Columns\TextColumn::make('users.program')
+                    ->label('Program')
+                    ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 Tables\Columns\TextColumn::make('nilai')
                     ->sortable()
                     ->numeric(
@@ -152,7 +169,10 @@ class PilihanResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 ]),
-            ]);
+            ])
+            ->defaultSort(function (Builder $query) {
+                return $query->orderBy('kampus_id', 'asc')->orderBy('jurusan_id', 'asc')->orderBy('nilai', 'desc');
+            });
     }
 
     public static function getRelations(): array
