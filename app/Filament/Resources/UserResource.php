@@ -92,7 +92,12 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('username')
                     ->searchable()->hidden(!$userAuth->hasRole('super_admin')),
                 Tables\Columns\TextColumn::make('nilai')
-                    ->searchable(),
+                    ->searchable()
+                    ->numeric(
+                        decimalPlaces: 2,
+                        decimalSeparator: '.',
+                        thousandsSeparator: ',',
+                    ),
                 Tables\Columns\IconColumn::make('is_can_choose')
                     ->label('Dapat Memilih')
                     ->boolean(),

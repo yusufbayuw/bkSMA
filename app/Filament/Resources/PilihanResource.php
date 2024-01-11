@@ -114,7 +114,12 @@ class PilihanResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nilai')
-                    ->sortable(),
+                    ->sortable()
+                    ->numeric(
+                        decimalPlaces: 2,
+                        decimalSeparator: '.',
+                        thousandsSeparator: ',',
+                    ),
                 Tables\Columns\TextColumn::make('kampuses.nama_kampus')
                     ->label('Kampus')
                     ->sortable()
