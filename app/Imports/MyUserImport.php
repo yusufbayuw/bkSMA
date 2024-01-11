@@ -22,9 +22,10 @@ class MyUserImport implements ToCollection
                 User::updateOrCreate(
                     ['id' => $row[0],],[
                     'name' => $row[1],
-                    'email' => $row[2],
-                    'username' => $row[3],
-                    'nilai' => $row[4],
+                    'kelas' => $row[2],
+                    'email' => $row[3],
+                    'username' => $row[4],
+                    'nilai' => $row[5],
                 ]);
             }           
         }
