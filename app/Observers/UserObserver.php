@@ -20,9 +20,8 @@ class UserObserver
      */
     public function updated(User $user): void
     {
-        $nilaiOld = $user->getOriginal('nilai');
         $nilaiNew = $user->nilai;
-        if ($nilaiOld != $nilaiNew) {
+        if ($nilaiNew) {
             $pilihan = Pilihan::where('user_id', $user->id)->first();
             if ($pilihan) {
                 $pilihan->nilai = $nilaiNew;
