@@ -115,7 +115,9 @@ class PilihanResource extends Resource
                     ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
                 Tables\Columns\TextColumn::make('users.ranking')
                     ->label('Eligible')
+                    ->numeric()
                     ->badge()
+                    ->color(fn (Pilihan $record) => ($userAuth->hasRole(['super_admin', 'guru_bk'])) ? ((User::find($record->user_id)->eligible) ? null : 'danger') : null)
                     ->sortable()
                     ->hidden(!($userAuth->hasRole(['super_admin', 'guru_bk']) || Pengaturan::find(4)->nilai)),
                 Tables\Columns\TextColumn::make('users.name')
