@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Pilihan;
+use App\Models\User;
 use App\Observers\PilihanObserver;
+use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -28,6 +30,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Pilihan::observe(PilihanObserver::class);
+        User::observe(UserObserver::class);
     }
 
     /**
