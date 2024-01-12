@@ -104,8 +104,6 @@ class PilihanResource extends Resource
                     ->label('Eligible (IPA/IPS)'),
                 Group::make('users.kelas')
                     ->titlePrefixedWithLabel(false)
-                    //->getKeyFromRecordUsing(fn (Pilihan $record): string => $record->jurusan_id)
-                    ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('kampus_id', 'asc')->orderBy('jurusan_id', 'asc')->orderBy('ranking', $direction))
                     //->getTitleFromRecordUsing(fn (Pilihan $record): string => ucfirst($record->users->program))
                     ->label('Kelas'),
             ])->groupingSettingsHidden(!$userAuth->hasRole(['super_admin', 'guru_bk', 'wali_kelas']))
