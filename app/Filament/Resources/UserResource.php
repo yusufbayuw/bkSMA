@@ -41,6 +41,7 @@ class UserResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
+                    ->unique()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('username')
                     ->maxLength(255),
