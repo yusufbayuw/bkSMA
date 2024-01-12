@@ -35,7 +35,10 @@ class UserObserver
      */
     public function deleted(User $user): void
     {
-        //
+        $pilihan = Pilihan::where('user_id', $user->id)->first();
+        if ($pilihan) {
+            $pilihan->delete();
+        }
     }
 
     /**
