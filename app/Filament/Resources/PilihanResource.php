@@ -102,7 +102,7 @@ class PilihanResource extends Resource
                     //->getKeyFromRecordUsing(fn (Pilihan $record): string => $record->jurusan_id)
                     ->getTitleFromRecordUsing(fn (Pilihan $record): string => ucfirst($record->users->program))
                     ->label('Eligible (IPA/IPS)'),
-            ])->groupingSettingsHidden(!$userAuth->hasRole(['super_admin', 'guru_bk']))
+            ])->groupingSettingsHidden(!$userAuth->hasRole(['super_admin', 'guru_bk', 'wali_kelas']))
             ->columns([
                 //Tables\Columns\TextColumn::make('no')
                 //      \->rowIndex(isFromZero: false),
