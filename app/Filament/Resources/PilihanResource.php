@@ -40,7 +40,7 @@ class PilihanResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $userAuth = auth()->user();
-        if ($userAuth->hasRole(['super_admin', 'admin_pusat', 'guru_bk'])) {
+        if ($userAuth->hasRole(['super_admin', 'admin_pusat', 'guru_bk', 'wali_kelas'])) {
             return parent::getEloquentQuery(); //->orderBy('kampus_id','asc')->orderBy('jurusan_id', 'asc')->orderBy('nilai', 'desc');
         } else {
             return parent::getEloquentQuery()->where('user_id', $userAuth->id);
