@@ -43,7 +43,12 @@ class PilihanResource extends Resource
         if ($userAuth->hasRole(['super_admin', 'admin_pusat', 'guru_bk', 'wali_kelas'])) {
             return parent::getEloquentQuery(); //->orderBy('kampus_id','asc')->orderBy('jurusan_id', 'asc')->orderBy('nilai', 'desc');
         } else {
-            return parent::getEloquentQuery()->where('user_id', $userAuth->id);
+            $jurusan = Pilihan::where('user_id', $userAuth->id)->first()->jurusan_id ?? '';
+            if ($jurusan) {
+                return parent::getEloquentQuery()->where('jurusan_id', Pilihan::where('user_id', $userAuth->id)->first()->jurusan_id);
+            } else {
+                return parent::getEloquentQuery()->where('user_id', $userAuth->id);
+            }
         }
     }
 
@@ -116,7 +121,7 @@ class PilihanResource extends Resource
                     ->hidden(!$userAuth->hasRole(['super_admin'])), */
                 Tables\Columns\TextColumn::make('ranking')
                     ->label('Ranking')
-                    ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
+                    ->hidden(!($userAuth->hasRole(['super_admin', 'guru_bk']) || Pengaturan::find(4)->nilai)),
                 Tables\Columns\TextColumn::make('users.ranking')
                     ->label('Eligible')
                     ->formatStateUsing(fn ($state) => (int)($state))
