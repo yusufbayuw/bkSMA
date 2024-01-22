@@ -12,6 +12,9 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\EventResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -21,23 +24,32 @@ class EventResource extends Resource
 {
     protected static ?string $model = Event::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
+
+    protected static ?string $modelLabel = 'Konsultasi';
+
+    protected static ?string $navigationGroup = 'Administrator';
+
+    protected static ?string $navigationLabel = 'Konsultasi';
+
+    protected static ?string $slug = 'konsultasi';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Hidden::make('user_id')->default(auth()->user()->id),
-                Forms\Components\TextInput::make('nama')
+                TextInput::make('nama')
+                    ->label('Nama Siswa')
                     ->default(auth()->user()->name)
-                    ->readOnly()
-                    ->maxLength(255),
-                Forms\Components\Hidden::make('starts_at'),
-                Forms\Components\Hidden::make('ends_at'),//->live()->afterStateUpdated(fn ($state) => dd($state))->closeOnDateSelection(),
-                Forms\Components\DatePicker::make('start_date')
+                    ->readOnly(),
+                Hidden::make('starts_at'),
+                Hidden::make('ends_at'),
+                DatePicker::make('start_date')
+                    ->label('Pilih Tanggal Konsultasi')
                     ->afterStateUpdated(function (Get $get, Set $set, $state) {
                         $time = $get('start_time');
-                        $date = explode(' ',$state)[0];
+                        $date = Carbon::parse($state)->format('Y-m-d');
                         if ($time) {
                             $set('starts_at', Carbon::parse($date . 'T' . $time));
                             $set('ends_at', Carbon::parse($date . 'T' . $time)->addHour());
@@ -45,13 +57,13 @@ class EventResource extends Resource
                     })
                     ->required()
                     ->native(false)
-                    ->displayFormat('d/m/Y')
+                    ->displayFormat('l, d M Y')
                     ->minDate(now())
                     ->closeOnDateSelection()
                     ->weekStartsOnSunday()
                     ->live(),
-                Forms\Components\Select::make('start_time')
-                    //->native(false)    
+                Select::make('start_time')
+                    ->label('Pilih Jam Konsultasi')
                     ->options(function (Get $get) {
                         $timelist = [
                             '07:00:00' => '07:00',
@@ -62,24 +74,40 @@ class EventResource extends Resource
                             '13:00:00' => '13:00',
                             '14:00:00' => '14:00',
                         ];
-                        if ($get('start_date')) {
-                            $occupied = Event::where('start_date', $get('start_date'))->select('start_time')->get()->pluck('start_time')->toArray() ?? [];
-                            $timelist = array_diff($timelist, $occupied);
+                    
+                        $startDate = $get('start_date');
+                    
+                        if ($startDate) {
+                            $occupied = Event::where('start_date', $startDate)->pluck('start_time')->toArray() ?? [];
+                    
+                            $timelist = array_diff_key($timelist, array_flip($occupied));
+                    
+                            $currentKey = now()->format('H:i:s');
+                            
+                            $startDateCarbon = Carbon::parse($startDate);
+                    
+                            if ($startDateCarbon->isWeekend()) {
+                                $timelist = [];
+                            } elseif ($startDateCarbon->isToday()) {
+                                $timelist = array_filter($timelist, fn($key) => $key >= $currentKey, ARRAY_FILTER_USE_KEY);
+                            }
                         }
+                    
                         return $timelist;
                     })
                     ->afterStateUpdated(function (Get $get, Set $set, $state) {
-                        $date = explode(' ', $get('start_date'))[0];
+                        $date = Carbon::parse($get('start_date'))->format('Y-m-d');
                         $time = $state;
                         if ($date) {
-                            
+    
                             $set('starts_at', Carbon::parse($date . 'T' . $time));
                             $set('ends_at', Carbon::parse($date . 'T' . $time)->addHour());
-                        }   
+                        }
                     })
                     ->required()
                     ->hidden(fn (Get $get) => $get('start_date') === null)
                     ->live(),
+                TextInput::make('keterangan')->label('Keperluan Konsultasi untuk...')->required()->maxLength(255),
             ]);
     }
 
@@ -87,21 +115,20 @@ class EventResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('users.name')
+                    ->label('Nama')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('nama')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('users.kelas')
+                    ->label('Kelas')
+                    ->badge()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('starts_at')
+                    ->label('Jam Konsultasi')
                     ->dateTime()
+                    ->formatStateUsing(fn ($state) => Carbon::parse($state)->translatedFormat('l, d M Y @ H:i'))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ends_at')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('start_date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('start_time'),
+                Tables\Columns\TextColumn::make('keterangan'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

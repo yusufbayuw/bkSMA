@@ -6,14 +6,17 @@ use Carbon\Carbon;
 use App\Models\Event;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-use Filament\Widgets\Widget;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
-use App\Filament\Resources\EventResource;
 use Filament\Forms\Components\DatePicker;
 use Saade\FilamentFullCalendar\Data\EventData;
+use Saade\FilamentFullCalendar\Actions\EditAction;
+use Saade\FilamentFullCalendar\Actions\ViewAction;
+use Saade\FilamentFullCalendar\Actions\CreateAction;
+use Saade\FilamentFullCalendar\Actions\DeleteAction;
 use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
 
 class XalendarWidget extends FullCalendarWidget
@@ -25,15 +28,16 @@ class XalendarWidget extends FullCalendarWidget
         return [
             Hidden::make('user_id')->default(auth()->user()->id),
             TextInput::make('nama')
+                ->label('Nama Siswa')
                 ->default(auth()->user()->name)
-                ->readOnly()
-                ->maxLength(255),
+                ->readOnly(),
             Hidden::make('starts_at'),
-            Hidden::make('ends_at'),//->live()->afterStateUpdated(fn ($state) => dd($state))->closeOnDateSelection(),
+            Hidden::make('ends_at'),
             DatePicker::make('start_date')
+                ->label('Pilih Tanggal Konsultasi')
                 ->afterStateUpdated(function (Get $get, Set $set, $state) {
                     $time = $get('start_time');
-                    $date = explode(' ',$state)[0];
+                    $date = Carbon::parse($state)->format('Y-m-d');
                     if ($time) {
                         $set('starts_at', Carbon::parse($date . 'T' . $time));
                         $set('ends_at', Carbon::parse($date . 'T' . $time)->addHour());
@@ -41,13 +45,13 @@ class XalendarWidget extends FullCalendarWidget
                 })
                 ->required()
                 ->native(false)
-                ->displayFormat('d/m/Y')
+                ->displayFormat('l, d M Y')
                 ->minDate(now())
                 ->closeOnDateSelection()
                 ->weekStartsOnSunday()
                 ->live(),
             Select::make('start_time')
-                //->native(false)    
+                ->label('Pilih Jam Konsultasi')
                 ->options(function (Get $get) {
                     $timelist = [
                         '07:00:00' => '07:00',
@@ -58,45 +62,76 @@ class XalendarWidget extends FullCalendarWidget
                         '13:00:00' => '13:00',
                         '14:00:00' => '14:00',
                     ];
-                    if ($get('start_date')) {
-                        $occupied = Event::where('start_date', $get('start_date'))->select('start_time')->get()->pluck('start_time')->toArray() ?? [];
-                        $timelist = array_diff($timelist, $occupied);
+                
+                    $startDate = $get('start_date');
+                
+                    if ($startDate) {
+                        $occupied = Event::where('start_date', $startDate)->pluck('start_time')->toArray() ?? [];
+                
+                        $timelist = array_diff_key($timelist, array_flip($occupied));
+                
+                        $currentKey = now()->format('H:i:s');
+                        
+                        $startDateCarbon = Carbon::parse($startDate);
+                
+                        if ($startDateCarbon->isWeekend()) {
+                            $timelist = [];
+                        } elseif ($startDateCarbon->isToday()) {
+                            $timelist = array_filter($timelist, fn($key) => $key >= $currentKey, ARRAY_FILTER_USE_KEY);
+                        }
                     }
+                
                     return $timelist;
                 })
                 ->afterStateUpdated(function (Get $get, Set $set, $state) {
-                    $date = explode(' ', $get('start_date'))[0];
+                    $date = Carbon::parse($get('start_date'))->format('Y-m-d');
                     $time = $state;
                     if ($date) {
-                        
+
                         $set('starts_at', Carbon::parse($date . 'T' . $time));
                         $set('ends_at', Carbon::parse($date . 'T' . $time)->addHour());
-                    }   
+                    }
                 })
                 ->required()
                 ->hidden(fn (Get $get) => $get('start_date') === null)
                 ->live(),
+            TextInput::make('keterangan')->label('Keperluan Konsultasi untuk...')->required()->maxLength(255),
         ];
     }
 
     public function fetchEvents(array $fetchInfo): array
     {
         return Event::query()
-        ->where('starts_at', '>=', $fetchInfo['start'])
-        ->where('ends_at', '<=', $fetchInfo['end'])
-        ->get()
-        ->map(
-            fn (Event $event) => EventData::make()
-                ->id($event->id)
-                ->title($event->nama)
-                ->start($event->starts_at)
-                ->end($event->ends_at)
-                ->url(
-                    url: EventResource::getUrl(name: 'view', parameters: ['record' => $event]),
-                    shouldOpenUrlInNewTab: true
-                )
-        )
-        ->toArray();
+            ->where('starts_at', '>=', $fetchInfo['start'])
+            ->where('ends_at', '<=', $fetchInfo['end'])
+            ->get()
+            ->map(
+                fn (Event $event) => EventData::make()
+                    ->id($event->id)
+                    ->title($event->nama)
+                    ->start($event->starts_at)
+                    ->end($event->ends_at)
+            )
+            ->toArray();
     }
 
+    protected function headerActions(): array
+    {
+        return [
+            CreateAction::make()->icon('heroicon-o-plus-circle')->label('Booking Konsultasi'),
+        ];
+    }
+
+    protected function modalActions(): array
+    {
+        return [
+            EditAction::make()->hidden(!auth()->user()->hasRole(['super_admin', 'guru_bk'])),
+            DeleteAction::make()->hidden(!auth()->user()->hasRole(['super_admin', 'guru_bk'])),
+        ];
+    }
+
+    protected function viewAction(): Action
+    {
+        return ViewAction::make()->hidden(!auth()->user()->hasRole(['super_admin', 'guru_bk']));
+    }
 }

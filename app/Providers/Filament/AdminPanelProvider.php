@@ -2,8 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Widgets\BannerEligibleWidget;
-use App\Filament\Widgets\XalendarWidget;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\Widgets;
@@ -75,8 +73,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
-                FilamentFullCalendarPlugin::make()
-                    ->selectable(),
+                FilamentFullCalendarPlugin::make(),
                 BreezyCore::make(),
                 FilamentShieldPlugin::make(),
                 FilamentBackgroundsPlugin::make()

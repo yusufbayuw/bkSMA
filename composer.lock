@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b547d3357eb093ac66a948340af3ee7e",
+    "content-hash": "d7b3c533fa891305224e5912ab9d3333",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -6209,16 +6209,16 @@
         },
         {
             "name": "saade/filament-fullcalendar",
-            "version": "v3.0.0",
+            "version": "v3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/saade/filament-fullcalendar.git",
-                "reference": "cd275468ab4f7a7b903d50bd3c45850cceb802ff"
+                "reference": "525641a46ac0e8cb4a64dfa08c6f6cdfab8224d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/saade/filament-fullcalendar/zipball/cd275468ab4f7a7b903d50bd3c45850cceb802ff",
-                "reference": "cd275468ab4f7a7b903d50bd3c45850cceb802ff",
+                "url": "https://api.github.com/repos/saade/filament-fullcalendar/zipball/525641a46ac0e8cb4a64dfa08c6f6cdfab8224d8",
+                "reference": "525641a46ac0e8cb4a64dfa08c6f6cdfab8224d8",
                 "shasum": ""
             },
             "require": {
@@ -6268,7 +6268,7 @@
             ],
             "support": {
                 "issues": "https://github.com/saade/filament-fullcalendar/issues",
-                "source": "https://github.com/saade/filament-fullcalendar/tree/v3.0.0"
+                "source": "https://github.com/saade/filament-fullcalendar/tree/v3.1.1"
             },
             "funding": [
                 {
@@ -6276,7 +6276,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-09-26T22:01:14+00:00"
+            "time": "2023-12-07T13:25:16+00:00"
         },
         {
             "name": "spatie/color",
@@ -11659,5 +11659,5 @@
         "php": "^8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
