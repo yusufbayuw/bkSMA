@@ -37,7 +37,7 @@ class PilihanResource extends Resource
         return (auth()->user()->hasRole(['super_admin', 'guru_bk'])) ? static::getModel()::count() : null;
     }
 
-    public static function getEloquentQuery(): Builder
+    /* public static function getEloquentQuery(): Builder
     {
         $userAuth = auth()->user();
         if ($userAuth->hasRole(['super_admin', 'admin_pusat', 'guru_bk', 'wali_kelas'])) {
@@ -50,7 +50,7 @@ class PilihanResource extends Resource
                 return parent::getEloquentQuery()->where('user_id', $userAuth->id);
             }
         }
-    }
+    } */
 
     public static function form(Form $form): Form
     {
