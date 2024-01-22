@@ -111,7 +111,7 @@ class PilihanResource extends Resource
                     ->titlePrefixedWithLabel(false)
                     //->getTitleFromRecordUsing(fn (Pilihan $record): string => ucfirst($record->users->program))
                     ->label('Kelas'),
-            ])->groupingSettingsHidden(!$userAuth->hasRole(['super_admin', 'guru_bk', 'wali_kelas']))
+            ])//->groupingSettingsHidden(!$userAuth->hasRole(['super_admin', 'guru_bk', 'wali_kelas']))
             ->columns([
                 //Tables\Columns\TextColumn::make('no')
                 //      \->rowIndex(isFromZero: false),
