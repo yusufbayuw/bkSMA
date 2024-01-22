@@ -30,6 +30,11 @@ class BannerKampusWidget extends Widget
             'setting' => $setting,
             'kampus' => $kampus,
             'jurusan' => $jurusan,
-            ];
+        ];
+    }
+
+    public static function canView(): bool
+    {
+        return auth()->user()->hasRole(['panel_user']);
     }
 }

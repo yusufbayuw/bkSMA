@@ -60,7 +60,12 @@ class User extends Authenticatable implements FilamentUser
     
     public function pilihans(): HasOne
     {
-        return $this->hasOne(Pilihan::class, 'pilihan_id', 'id');
+        return $this->hasOne(Pilihan::class, 'user_id', 'id');
+    }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event::class, 'user_id', 'id');
     }
 
 }

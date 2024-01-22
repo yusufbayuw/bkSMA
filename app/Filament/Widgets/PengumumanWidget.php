@@ -17,4 +17,9 @@ class PengumumanWidget extends Widget
 
         return ['pengumuman' => $pengumuman,];
     }
+
+    public static function canView(): bool
+    {
+        return true;
+    }
 }

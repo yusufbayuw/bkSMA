@@ -17,6 +17,11 @@ class BannerEligibleWidget extends Widget
         return [
             'nama' => $nama,
             'setting' => $setting,
-            ];
+        ];
+    }
+
+    public static function canView(): bool
+    {
+        return auth()->user()->hasRole(['panel_user']);
     }
 }
