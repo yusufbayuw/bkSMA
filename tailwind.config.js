@@ -4,6 +4,7 @@ export default {
     presets: [preset],
     content: [
         './app/Filament/**/*.php',
+        './resources/views/mail/*.blade.php',
         './resources/views/filament/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
         './vendor/solution-forest/filament-tree/resources/**/*.blade.php',

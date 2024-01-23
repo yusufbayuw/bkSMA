@@ -1,5 +1,9 @@
 <?php
 
+use Carbon\Carbon;
+use App\Models\Event;
+use App\Mail\KonsulnotifEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +18,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('/app');
+    $konsultasis = Event::whereDate('starts_at', Carbon::today())->get();
+    if ($konsultasis) {
+        foreach ($konsultasis as $key => $konsultasi) {
+            Mail::to($konsultasi->users->email)
+                ->send(new KonsulnotifEmail($konsultasi));
+
+            return 'success';
+        }
+    }
+    //return redirect('/app');
 });

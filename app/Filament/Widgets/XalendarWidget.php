@@ -46,7 +46,7 @@ class XalendarWidget extends FullCalendarWidget
                 ->required()
                 ->native(false)
                 ->displayFormat('l, d M Y')
-                ->minDate(now())
+                ->minDate(now()->startOfDay())
                 ->closeOnDateSelection()
                 ->weekStartsOnSunday()
                 ->live(),
@@ -105,7 +105,7 @@ class XalendarWidget extends FullCalendarWidget
             ->map(
                 fn (Event $event) => EventData::make()
                     ->id($event->id)
-                    ->title($event->nama)
+                    ->title($event->users->name)
                     ->start($event->starts_at)
                     ->end($event->ends_at)
             )
