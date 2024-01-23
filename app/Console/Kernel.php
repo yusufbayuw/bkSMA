@@ -24,7 +24,9 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             // reset is_can_choose
             User::whereNotNull('program')->update(['is_can_choose' => true]);
+        })->weekly();
 
+        $schedule->call(function () {
             // ranking pilihan
             $rankedData = DB::table('pilihans')
                 ->select('id', 'nilai', 'jurusan_id')
@@ -35,17 +37,24 @@ class Kernel extends ConsoleKernel
                 // Update the Pilihan model with the calculated ranking
                 Pilihan::where('id', $data->id)->update(['ranking' => $data->rank]);
             }
-        });
+        })->hourly();
 
         $schedule->call(function () {
             //email konsultasi
             $konsultasis = Event::whereDate('starts_at', Carbon::today())->get();
             if ($konsultasis) {
-                foreach ($konsultasis as $key => $konsultasi) {
-                    Mail::to($konsultasi->users->email)->send(new KonsulnotifEmail($konsultasi));
+                $gurubk = User::whereHas('roles', function ($query) {
+                    $query->where('name', 'guru_bk');
+                })->get();
+                if ($gurubk) {
+                    foreach ($gurubk as $key => $guru) {
+                        foreach ($konsultasis as $key => $konsultasi) {
+                            Mail::to($guru->email)->queue(new KonsulnotifEmail($konsultasi));
+                        }
+                    }
                 }
             }
-        });
+        });//->dailyAt('19:30');
     }
 
     /**

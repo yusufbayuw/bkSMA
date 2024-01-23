@@ -18,14 +18,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $konsultasis = Event::whereDate('starts_at', Carbon::today())->get();
-    if ($konsultasis) {
-        foreach ($konsultasis as $key => $konsultasi) {
-            Mail::to($konsultasi->users->email)
-                ->send(new KonsulnotifEmail($konsultasi));
-
-            return 'success';
-        }
-    }
-    //return redirect('/app');
+    return redirect('/app');
 });

@@ -27,13 +27,14 @@
             
                     <h2 class="text-2xl font-bold mb-4">Konsultasi a.n. {{ $event->users->name }}</h2>
             
-                    <p class="text-gray-700 mb-4">Salam hormat,</p>
+                    <p class="text-primary-700 mb-4">Salam hormat,</p>
             
-                    <p class="text-gray-700 mb-4">Kami dengan senang hati memberitahukan kepada Anda bahwa kami memiliki jadwal konsultasi</p>
+                    <p class="text-gray-700 mb-4">Kami dengan senang hati memberitahukan bahwa hari ini Anda memiliki jadwal konsultasi dengan</p>
             
                     <div class="bg-blue-100 p-4 mb-4 font-bold">
                         <p class="text-blue-800 font-semibold">{{ $event->users->name }} kelas {{ $event->users->kelas }}</p>
-                        <p class="text-blue-700">pada {{ Carbon\Carbon::parse($event->start_date)->translatedFormat('l, d M Y') }} pukul {{ $event->start_time }}</p>
+                        <p class="text-blue-700">pada {{ Carbon\Carbon::parse($event->start_date)->translatedFormat('l, d M Y') }} pukul {{ $event->start_time }}.</p>
+                        <p class="text-secondary-700">Keperluan konsultasi: {{ $event->keterangan }}.</p>
                     </div>
             
                     <p class="text-gray-700 mb-4">Terima kasih atas perhatiannya.</p>
