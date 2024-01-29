@@ -7,6 +7,7 @@ use App\Models\Event;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Model;
@@ -93,6 +94,9 @@ class XalendarWidget extends FullCalendarWidget
                 ->hidden(fn (Get $get) => $get('start_date') === null)
                 ->live(),
             TextInput::make('keterangan')->label('Keperluan Konsultasi untuk...')->required()->maxLength(255),
+            Radio::make('izin_wk')
+                    ->label(fn () => 'Apakah sudah izin ke Wali Kelas ' . auth()->user()->kelas . '?')
+                    ->boolean(),
         ];
     }
 

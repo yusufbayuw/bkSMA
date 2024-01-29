@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\EventResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\EventResource\RelationManagers;
+use Filament\Forms\Components\Radio;
 
 class EventResource extends Resource
 {
@@ -108,6 +109,9 @@ class EventResource extends Resource
                     ->hidden(fn (Get $get) => $get('start_date') === null)
                     ->live(),
                 TextInput::make('keterangan')->label('Keperluan Konsultasi untuk...')->required()->maxLength(255),
+                Radio::make('izin_wk')
+                    ->label(fn () => 'Apakah sudah izin ke Wali Kelas ' . auth()->user()->kelas . '?')
+                    ->boolean(),
             ]);
     }
 
@@ -129,6 +133,9 @@ class EventResource extends Resource
                     ->formatStateUsing(fn ($state) => Carbon::parse($state)->translatedFormat('l, d M Y @ H:i'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('keterangan'),
+                Tables\Columns\IconColumn::make('izin_wk')
+                    ->label('Izin Wali Kelas')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
