@@ -23,7 +23,7 @@ class UserResource extends Resource
 
     protected static ?string $navigationGroup = 'Administrator';
 
-    protected static ?string $navigationLabel = 'Anggota';
+    protected static ?string $navigationLabel = 'Pengguna';
 
     protected static ?string $slug = 'anggota';
 
@@ -36,6 +36,10 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('angkatan_lulus_id')
+                    ->relationship('angkatan_lulus', 'tahun')
+                    ->searchable()
+                    ->nullable(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -76,6 +80,9 @@ class UserResource extends Resource
                     ->label('ID')
                     ->searchable()
                     ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
+                Tables\Columns\TextColumn::make('angkatan_lulus.tahun')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('kelas')

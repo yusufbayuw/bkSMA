@@ -68,4 +68,9 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Event::class, 'user_id', 'id');
     }
 
+    public function angkatan_lulus(): BelongsTo
+    {
+        return $this->belongsTo(AngkatanLulus::class, 'angkatan_lulus_id', 'id');
+    }
+
 }

@@ -21,11 +21,12 @@ class MyUserImport implements ToCollection
                 //if (User::find($row[0])) {}
                 User::updateOrCreate(
                     ['id' => $row[0],],[
-                    'name' => $row[1],
-                    'kelas' => $row[2],
-                    'email' => $row[3],
-                    'username' => $row[4],
-                    'nilai' => $row[5],
+                    'angkatan_lulus_id' => $row[1],
+                    'name' => $row[2],
+                    'kelas' => $row[3],
+                    'email' => $row[4],
+                    'username' => $row[5],
+                    'nilai' => $row[6],
                 ]);
             }           
         }
