@@ -68,26 +68,39 @@ class AngkatanLulusResource extends Resource
 
                         $users = User::where('angkatan_lulus_id', $angkatanLulusId)->get();
 
-                        foreach ($users as $user) {
-                            // Create a new alumni record
-                            Alumni::create([
-                                'angkatan_lulus_id' => $angkatanLulusId,
-                                'name' => $user->name,
-                                'email' => $user->email,
-                                'username' => $user->username,
-                                'email_verified_at' => $user->email_verified_at,
-                                'password' => $user->password,
-                                'is_can_choose' => $user->is_can_choose,
-                                'is_choosed' => $user->is_choosed,
-                                'nilai' => $user->nilai,
-                                'kelas' => $user->kelas,
-                                'program' => $user->program,
-                                'ranking' => $user->ranking,
-                                'eligible' => $user->eligible,
-                            ]);
-
-                            // Delete the user record
-                            $user->delete();
+                        if ($users) {
+                            foreach ($users as $user) {
+                                // Create a new alumni record
+                                Alumni::create([
+                                    'angkatan_lulus_id' => $angkatanLulusId,
+                                    'name' => $user->name,
+                                    'email' => $user->email,
+                                    'username' => $user->username,
+                                    'email_verified_at' => $user->email_verified_at,
+                                    'password' => $user->password,
+                                    'is_can_choose' => $user->is_can_choose,
+                                    'is_choosed' => $user->is_choosed,
+                                    'nilai' => $user->nilai,
+                                    'kelas' => $user->kelas,
+                                    'program' => $user->program,
+                                    'ranking' => $user->ranking,
+                                    'eligible' => $user->eligible,
+                                    'kampus_pilihan_id' => $user->pilihans->kampus_id ?? null,
+                                    'jurusan_pilihan_id' => $user->pilihans->jurusan_id ?? null,
+                                ]);
+    
+                                // Delete the user record
+                                $user->delete();
+                            }
+    
+                            $angkatanLulusCount = AngkatanLulus::find($angkatanLulusId);
+                            if ($angkatanLulusCount->jumlah_angkatan) {
+                                $angkatanLulusCount->jumlah_angkatan = $angkatanLulusCount->jumlah_angkatan + $users->count();
+                                $angkatanLulusCount->save();
+                            } else {
+                                $angkatanLulusCount->jumlah_angkatan = $users->count();
+                                $angkatanLulusCount->save();
+                            }
                         }
                     }),
                 Tables\Actions\EditAction::make(),

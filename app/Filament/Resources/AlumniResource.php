@@ -91,6 +91,22 @@ class AlumniResource extends Resource
                     ->sortable(),
                 Tables\Columns\IconColumn::make('eligible')
                     ->boolean(),
+                Tables\Columns\TextColumn::make('kampus_pilihan.nama_kampus')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('jurusan_pilihan.nama_jurusan')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('kampus_real.nama_kampus')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('jurusan_real.nama_jurusan')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

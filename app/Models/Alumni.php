@@ -15,13 +15,23 @@ class Alumni extends Model
         return $this->belongsTo(AngkatanLulus::class, 'angkatan_lulus_id', 'id');
     }
 
-    public function kampuses(): BelongsTo
+    public function kampus_pilihan(): BelongsTo
     {
-        return $this->belongsTo(Kampus::class, 'kampus_id', 'id');
+        return $this->belongsTo(Kampus::class, 'kampus_pilihan_id', 'id');
     }
 
-    public function jurusans(): BelongsTo
+    public function jurusan_pilihan(): BelongsTo
     {
-        return $this->belongsTo(Jurusan::class, 'jurusan_id', 'id');
+        return $this->belongsTo(Jurusan::class, 'jurusan_pilihan_id', 'id');
+    }
+
+    public function kampus_real(): BelongsTo
+    {
+        return $this->belongsTo(Kampus::class, 'kampus_real_id', 'id');
+    }
+
+    public function jurusan_real(): BelongsTo
+    {
+        return $this->belongsTo(Jurusan::class, 'jurusan_real_id', 'id');
     }
 }
