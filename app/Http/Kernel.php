@@ -45,6 +45,7 @@ class Kernel extends HttpKernel
             \app\Http\Middleware\HstsMiddleware::class,
             \App\Http\Middleware\RemoveTimestampHeaders::class,
             \App\Http\Middleware\NosniffHeaderMiddleware::class,
+            \App\Http\Middleware\RobotsTagMiddleware::class,
         ],
 
         'api' => [
