@@ -11,6 +11,10 @@ class Event extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'izin_wk' => 'boolean',
+    ];
+
     public function users(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

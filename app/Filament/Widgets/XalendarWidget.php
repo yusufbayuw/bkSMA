@@ -7,6 +7,7 @@ use App\Models\Event;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -54,11 +55,17 @@ class XalendarWidget extends FullCalendarWidget
             Select::make('start_time')
                 ->label('Pilih Jam Konsultasi')
                 ->options(function (Get $get) {
-                    $timelist = [
+                    /* $timelist = [
                         '08:00:00' => '08:00 - 09:00',
                         '09:00:00' => '09:00 - 10:00',
                         '10:00:00' => '10:00 - 11:00',
                         '13:00:00' => '13:00 - 14:00',
+                    ]; */
+
+                    $timelist = [
+                        '12:00:00' => '12:00-12:30',
+                        '14:00:00' => '14:00-14:30',
+                        '14:30:00' => '14:30-15:00',
                     ];
                 
                     $startDate = $get('start_date');
@@ -94,9 +101,13 @@ class XalendarWidget extends FullCalendarWidget
                 ->hidden(fn (Get $get) => $get('start_date') === null)
                 ->live(),
             TextInput::make('keterangan')->label('Keperluan Konsultasi untuk...')->required()->maxLength(255),
-            Radio::make('izin_wk')
+            Checkbox::make('izin_wk')
+                ->label('Saya sudah izin Wali Kelas')
+                ->accepted()
+                ->validationMessages(['accepted' => 'Ceklist bahwa Anda sudah izin ke Wali Kelas']),
+            /* Radio::make('izin_wk')
                     ->label(fn () => 'Apakah sudah izin ke Wali Kelas ' . auth()->user()->kelas . '?')
-                    ->boolean(),
+                    ->boolean(), */
         ];
     }
 
@@ -119,7 +130,7 @@ class XalendarWidget extends FullCalendarWidget
     protected function headerActions(): array
     {
         return [
-            CreateAction::make()->icon('heroicon-o-plus-circle')->label('Booking Konsultasi'),
+            CreateAction::make()->icon('heroicon-o-plus-circle')->label('Booking Konsultasi')->modalHeading('Booking Jadwal'),
         ];
     }
 
