@@ -38,14 +38,14 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
 
             // security HARDENING
-            \App\Http\Middleware\ContentSecurityPolicy::class,
-            \App\Http\Middleware\ClickjackingProtection::class,
-            \App\Http\Middleware\ValidateRedirectBody::class,
-            \App\Http\Middleware\ForceHttps::class,
-            \app\Http\Middleware\HstsMiddleware::class,
-            \App\Http\Middleware\RemoveTimestampHeaders::class,
-            \App\Http\Middleware\NosniffHeaderMiddleware::class,
-            \App\Http\Middleware\RobotsTagMiddleware::class,
+            //\App\Http\Middleware\ContentSecurityPolicy::class,
+            //\App\Http\Middleware\ClickjackingProtection::class,
+            //\App\Http\Middleware\ValidateRedirectBody::class,
+            //\App\Http\Middleware\ForceHttps::class,
+            //\app\Http\Middleware\HstsMiddleware::class,
+            //\App\Http\Middleware\RemoveTimestampHeaders::class,
+            //\App\Http\Middleware\NosniffHeaderMiddleware::class,
+            //\App\Http\Middleware\RobotsTagMiddleware::class,
         ],
 
         'api' => [
