@@ -19,6 +19,8 @@ use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use App\Filament\Resources\PilihanResource\RelationManagers;
 use App\Models\Pengaturan;
 use Filament\Forms\Set;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\Layout\Stack;
 
@@ -51,6 +53,21 @@ class PilihanResource extends Resource
             }
         }
     } 
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist->schema([
+            TextEntry::make('users.name')
+                ->label('Nama')
+                ->inlineLabel(),
+            TextEntry::make('kampuses.nama_kampus')
+                ->label('Kampus')
+                ->inlineLabel(),
+            TextEntry::make('jurusans.nama_jurusan')
+                ->label('Jurusan')
+                ->inlineLabel(),
+        ]);
+    }
 
     public static function form(Form $form): Form
     {
