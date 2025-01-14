@@ -67,7 +67,7 @@ class PilihanResource extends Resource
                     ->columnSpanFull()
                     ->unique(ignoreRecord:true)
                     ->validationMessages([
-                        "unique" => "Anda sudah pernah memilih"
+                        "unique" => "😔 Anda sudah pernah memilih. Silakan edit pilihan sebelumnya untuk mengubah jurusan 😉"
                     ])
                     ->required()
                     ->afterStateUpdated(fn (Set $set, $state) => $userAuthAdmin ? $set('nilai', User::find($state)->nilai) : null)

@@ -34,7 +34,7 @@ class ListPilihans extends ListRecords
                         Pilihan::where('id', $data->id)->update(['ranking' => $data->rank]);
                     }
                 })->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
-            Actions\CreateAction::make()->hidden($userAuth->is_choosed),
+            Actions\CreateAction::make(),//->hidden($userAuth->is_choosed),
         ];
     }
 }
