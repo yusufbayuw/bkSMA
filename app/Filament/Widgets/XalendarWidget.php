@@ -94,7 +94,13 @@ class XalendarWidget extends FullCalendarWidget
                 ->hidden(fn (Get $get) => $get('start_date') === null)
                 ->live(),
             TextInput::make('keterangan')->label('Keperluan Konsultasi untuk...')->required()->maxLength(255),
-            Checkbox::make('izin_mk')->label('Saya sudah izin Wali Kelas '.(auth()->user()->kelas ?? null))->inline()->accepted(),
+            Checkbox::make('izin_mk')
+                ->label('Saya sudah izin Wali Kelas '.(auth()->user()->kelas ?? null))
+                ->inline()
+                ->accepted()
+                ->validationMessages([
+                    "accepted" => "Anda harus izin wali kelas terlebih dahulu 🤨"
+                ]),
         ];
     }
 
