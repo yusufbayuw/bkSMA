@@ -65,6 +65,10 @@ class PilihanResource extends Resource
                     ->label('Nama Siswa')
                     ->disabled(!$userAuthCanChange)
                     ->columnSpanFull()
+                    ->unique(ignoreRecord:true)
+                    ->validationMessages([
+                        "unique" => "Anda sudah pernah memilih"
+                    ])
                     ->required()
                     ->afterStateUpdated(fn (Set $set, $state) => $userAuthAdmin ? $set('nilai', User::find($state)->nilai) : null)
                     ->live(),
