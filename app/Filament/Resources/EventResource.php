@@ -11,15 +11,16 @@ use Filament\Forms\Set;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\EventResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\EventResource\RelationManagers;
-use Filament\Forms\Components\Radio;
 
 class EventResource extends Resource
 {
@@ -67,13 +68,9 @@ class EventResource extends Resource
                     ->label('Pilih Jam Konsultasi')
                     ->options(function (Get $get) {
                         $timelist = [
-                            '07:00:00' => '07:00',
-                            '08:00:00' => '08:00',
-                            '09:00:00' => '09:00',
-                            '10:00:00' => '10:00',
-                            '11:00:00' => '11:00',
-                            '13:00:00' => '13:00',
-                            '14:00:00' => '14:00',
+                            '12:00:00' => '12:00-12.30',
+                            '14:00:00' => '14:00-14:30',
+                            '14:30:00' => '14:30-15:00',
                         ];
                     
                         $startDate = $get('start_date');
@@ -109,9 +106,7 @@ class EventResource extends Resource
                     ->hidden(fn (Get $get) => $get('start_date') === null)
                     ->live(),
                 TextInput::make('keterangan')->label('Keperluan Konsultasi untuk...')->required()->maxLength(255),
-                Radio::make('izin_wk')
-                    ->label(fn () => 'Apakah sudah izin ke Wali Kelas ' . auth()->user()->kelas . '?')
-                    ->boolean(),
+                Checkbox::make('izin_mk')->label('Saya sudah izin Wali Kelas')->inline()->accepted(),
             ]);
     }
 
