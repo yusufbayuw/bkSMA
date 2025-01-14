@@ -181,7 +181,9 @@ class PilihanResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make()->hidden(!auth()->user()->is_can_choose),
+                Tables\Actions\EditAction::make()
+                    ->hidden(!auth()->user()->is_can_choose)
+                    ->disabled(fn (Pilihan $record) => !($record->user_id === auth()->user()->id)),
             ])
             ->bulkActions([
                 ExportBulkAction::make()->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
