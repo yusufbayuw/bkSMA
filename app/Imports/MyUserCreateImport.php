@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
 class MyUserCreateImport implements ToCollection
@@ -22,7 +23,7 @@ class MyUserCreateImport implements ToCollection
                 'email' => $row[1],
                 'username' => $row[2],
                 'angkatan_lulus_id' => $row[9],
-                'password' => $row[3],
+                'password' => Hash::make($row[3]),
                 'is_can_choose' => $row[4],
                 'is_choosed' => $row[5],
                 'program' => $row[8],
