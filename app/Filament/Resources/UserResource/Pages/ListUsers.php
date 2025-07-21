@@ -4,6 +4,7 @@ namespace App\Filament\Resources\UserResource\Pages;
 
 use Filament\Actions;
 use App\Filament\Resources\UserResource;
+use App\Imports\MyUserCreateImport;
 use App\Imports\MyUserImport;
 use Filament\Resources\Pages\ListRecords;
 use EightyNine\ExcelImport\ExcelImportAction;
@@ -25,6 +26,7 @@ class ListUsers extends ListRecords
             ExcelImportAction::make('import')
                 ->color("info")
                 ->icon('heroicon-o-arrow-up-tray')
+                ->use(MyUserCreateImport::class)
                 ->hidden(!$userAuth->hasRole(['super_admin', 'guru_bk'])),
             Actions\CreateAction::make(),
         ];
