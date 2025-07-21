@@ -11,6 +11,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Checkbox;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
@@ -55,6 +56,7 @@ class XalendarWidget extends FullCalendarWidget
             Select::make('start_time')
                 ->label('Pilih Jam Konsultasi')
                 ->options(function (Get $get) {
+<<<<<<< HEAD
                     /* $timelist = [
                         '08:00:00' => '08:00 - 09:00',
                         '09:00:00' => '09:00 - 10:00',
@@ -66,6 +68,12 @@ class XalendarWidget extends FullCalendarWidget
                         '12:00:00' => '12:00-12:30',
                         '14:00:00' => '14:00-14:30',
                         '14:30:00' => '14:30-15:00',
+=======
+                    $timelist = [
+                        '12:00:00' => '12:00 - 12.30',
+                        '14:00:00' => '14:00 - 14:30',
+                        '14:30:00' => '14:30 - 15:00',
+>>>>>>> 94316dbab7cac24705dbd1c8b565243119ae8ce0
                     ];
                 
                     $startDate = $get('start_date');
@@ -101,6 +109,7 @@ class XalendarWidget extends FullCalendarWidget
                 ->hidden(fn (Get $get) => $get('start_date') === null)
                 ->live(),
             TextInput::make('keterangan')->label('Keperluan Konsultasi untuk...')->required()->maxLength(255),
+<<<<<<< HEAD
             Checkbox::make('izin_wk')
                 ->label('Saya sudah izin Wali Kelas')
                 ->accepted()
@@ -108,6 +117,15 @@ class XalendarWidget extends FullCalendarWidget
             /* Radio::make('izin_wk')
                     ->label(fn () => 'Apakah sudah izin ke Wali Kelas ' . auth()->user()->kelas . '?')
                     ->boolean(), */
+=======
+            Checkbox::make('izin_mk')
+                ->label('Saya sudah izin Wali Kelas '.(auth()->user()->kelas ?? null))
+                ->inline()
+                ->accepted()
+                ->validationMessages([
+                    "accepted" => "Anda harus izin wali kelas terlebih dahulu 🤨"
+                ]),
+>>>>>>> 94316dbab7cac24705dbd1c8b565243119ae8ce0
         ];
     }
 
