@@ -67,7 +67,6 @@ class EventResource extends Resource
                 Select::make('start_time')
                     ->label('Pilih Jam Konsultasi')
                     ->options(function (Get $get) {
-<<<<<<< HEAD
                         /* $timelist = [
                             '07:00:00' => '07:00',
                             '08:00:00' => '08:00',
@@ -80,10 +79,6 @@ class EventResource extends Resource
 
                         $timelist = [
                             '12:00:00' => '12:00-12:30',
-=======
-                        $timelist = [
-                            '12:00:00' => '12:00-12.30',
->>>>>>> 94316dbab7cac24705dbd1c8b565243119ae8ce0
                             '14:00:00' => '14:00-14:30',
                             '14:30:00' => '14:30-15:00',
                         ];
@@ -121,7 +116,6 @@ class EventResource extends Resource
                     ->required()
                     ->hidden(fn (Get $get) => $get('start_date') === null)
                     ->live(),
-<<<<<<< HEAD
                 TextInput::make('keterangan')
                     ->label('Keperluan Konsultasi untuk...')
                     ->required()
@@ -129,10 +123,6 @@ class EventResource extends Resource
                 Radio::make('izin_wk')
                     ->label(fn () => 'Apakah sudah izin ke Wali Kelas ' . auth()->user()->kelas . '?')
                     ->boolean(),
-=======
-                TextInput::make('keterangan')->label('Keperluan Konsultasi untuk...')->required()->maxLength(255),
-                Checkbox::make('izin_mk')->label('Saya sudah izin Wali Kelas')->inline()->accepted(),
->>>>>>> 94316dbab7cac24705dbd1c8b565243119ae8ce0
             ]);
     }
 
