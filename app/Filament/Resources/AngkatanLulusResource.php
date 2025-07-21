@@ -71,11 +71,12 @@ class AngkatanLulusResource extends Resource
                         if ($users) {
                             foreach ($users as $user) {
                                 // Create a new alumni record
-                                Alumni::create([
+                                Alumni::updateOrCreate([
                                     'angkatan_lulus_id' => $angkatanLulusId,
                                     'name' => $user->name,
                                     'email' => $user->email,
                                     'username' => $user->username,
+                                ],[
                                     'email_verified_at' => $user->email_verified_at,
                                     'password' => $user->password,
                                     'is_can_choose' => $user->is_can_choose,
