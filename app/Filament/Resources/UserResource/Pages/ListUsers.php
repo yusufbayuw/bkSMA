@@ -35,7 +35,7 @@ class ListUsers extends ListRecords
                 ->icon('heroicon-o-user-plus')
                 ->color('primary')
                 ->action(function () {
-                    $users = User::where('role', '!=', 'panel_user')->get();
+                    $users = User::all();
                     foreach ($users as $user) {
                         $user->assignRole('panel_user');
                     }
